@@ -18,17 +18,16 @@ import (
 	"context"
 	"fmt"
 
-	"k8s.io/apimachinery/pkg/api/equality"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
 	"github.com/gardener/gardener-extension-provider-openstack/pkg/apis/openstack"
 	openstackvalidation "github.com/gardener/gardener-extension-provider-openstack/pkg/apis/openstack/validation"
 
 	"github.com/gardener/gardener/pkg/apis/core"
 	gardencorev1beta1 "github.com/gardener/gardener/pkg/apis/core/v1beta1"
 	kutil "github.com/gardener/gardener/pkg/utils/kubernetes"
+	"k8s.io/apimachinery/pkg/api/equality"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type validationContext struct {
@@ -58,7 +57,7 @@ func (v *Shoot) validateShootCreation(ctx context.Context, shoot *core.Shoot) er
 	allErrs := field.ErrorList{}
 
 	allErrs = append(allErrs, openstackvalidation.ValidateInfrastructureConfigAgainstCloudProfile(valContext.infraConfig, valContext.shoot.Spec.Region, valContext.cloudProfileConfig, infraConfigPath)...)
-	allErrs = append(allErrs, openstackvalidation.ValidateControlPlaneConfigAgainstCloudProfile(valContext.cpConfig, valContext.shoot.Spec.Region, valContext.infraConfig.FloatingPoolName, valContext.cloudProfile, valContext.cloudProfileConfig, cpConfigPath)...)
+	allErrs = append(allErrs, openstackvalidation.ValidateControlPlaneConfigAgainstCloudProfile(valContext.cpConfig, valContext.shoot.Spec.Region, valContext.infraConfig.FloatingPoolName, valContext.cloudProfileConfig, cpConfigPath)...)
 	allErrs = append(allErrs, v.validateShoot(valContext)...)
 	return allErrs.ToAggregate()
 }
@@ -98,7 +97,7 @@ func (v *Shoot) validateShootUpdate(ctx context.Context, oldShoot, shoot *core.S
 		oldCpConfig.Zone != cpConfig.Zone ||
 		!equality.Semantic.DeepEqual(oldCpConfig.LoadBalancerClasses, cpConfig.LoadBalancerClasses) ||
 		oldValContext.infraConfig.FloatingPoolName != valContext.infraConfig.FloatingPoolName {
-		allErrs = append(allErrs, openstackvalidation.ValidateControlPlaneConfigAgainstCloudProfile(cpConfig, valContext.shoot.Spec.Region, valContext.infraConfig.FloatingPoolName, valContext.cloudProfile, valContext.cloudProfileConfig, cpConfigPath)...)
+		allErrs = append(allErrs, openstackvalidation.ValidateControlPlaneConfigAgainstCloudProfile(cpConfig, valContext.shoot.Spec.Region, valContext.infraConfig.FloatingPoolName, valContext.cloudProfileConfig, cpConfigPath)...)
 	}
 
 	if errList := openstackvalidation.ValidateWorkersUpdate(oldValContext.shoot.Spec.Provider.Workers, valContext.shoot.Spec.Provider.Workers, workersPath); len(errList) > 0 {

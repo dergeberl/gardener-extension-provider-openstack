@@ -347,23 +347,15 @@ func (vp *valuesProvider) GetControlPlaneShootChartValues(
 // GetStorageClassesChartValues returns the values for the shoot storageclasses chart applied by the generic actuator.
 func (vp *valuesProvider) GetStorageClassesChartValues(
 	_ context.Context,
-	cp *extensionsv1alpha1.ControlPlane,
+	_ *extensionsv1alpha1.ControlPlane,
 	cluster *extensionscontroller.Cluster,
 ) (map[string]interface{}, error) {
-	cpConfig := &api.ControlPlaneConfig{}
-	if cp.Spec.ProviderConfig != nil {
-		if _, _, err := vp.Decoder().Decode(cp.Spec.ProviderConfig.Raw, nil, cpConfig); err != nil {
-			return nil, errors.Wrapf(err, "could not decode providerConfig of controlplane '%s'", util.ObjectName(cp))
-		}
-	}
-
 	k8sVersionLessThan119, err := version.CompareVersions(cluster.Shoot.Spec.Kubernetes.Version, "<", "1.19")
 	if err != nil {
 		return nil, err
 	}
 
 	return map[string]interface{}{
-		"availability":         cpConfig.Zone,
 		"useLegacyProvisioner": k8sVersionLessThan119,
 	}, nil
 }
