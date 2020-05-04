@@ -1,5 +1,5 @@
 image:
-  repository: eu.gcr.io/gardener-project/gardener/extensions/provider-openstack
+  repository: einfachnuralex/gardener-extension-provider-openstack
   tag: latest
   pullPolicy: IfNotPresent
 
