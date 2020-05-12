@@ -56,7 +56,7 @@ config:
     storage:
       className: gardener.cloud-fast
       capacity: 25Gi
-      provisioner: csi-cinderplugin
+      provisioner: cinder.csi.openstack.org
 
 gardener:
   seed:
